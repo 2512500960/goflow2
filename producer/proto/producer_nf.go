@@ -620,6 +620,13 @@ func ConvertNetFlowDataSet(flowMessage *ProtoProducerMessage, version uint16, ba
 					if flowMessage.Bytes == 0 {
 						flowMessage.Bytes = uint64(len(v))
 					}
+				case netflow.IPFIX_FIELD_interfaceName:
+					if flowMessage.InIfName == "" {
+						flowMessage.InIfName = string(v)
+					} else {
+						flowMessage.OutIfName = string(v)
+					}
+
 				}
 			}
 		}
@@ -628,11 +635,14 @@ func ConvertNetFlowDataSet(flowMessage *ProtoProducerMessage, version uint16, ba
 	return nil
 }
 
-func SearchNetFlowDataSetsRecords(version uint16, baseTime uint32, uptime uint32, dataRecords []netflow.DataRecord, mapperNetFlow *NetFlowMapper, mapperSFlow *SFlowMapper) (flowMessageSet []producer.ProducerMessage, err error) {
+func SearchNetFlowDataSetsRecords(version uint16, baseTime uint32, uptime uint32, dataRecords []netflow.DataRecord, mapperNetFlow *NetFlowMapper, mapperSFlow *SFlowMapper, templateId uint16) (flowMessageSet []producer.ProducerMessage, err error) {
 	for _, record := range dataRecords {
 		fmsg := protoMessagePool.Get().(*ProtoProducerMessage)
+
 		fmsg.Reset()
+		fmsg.TemplateId = uint32(templateId)
 		if err := ConvertNetFlowDataSet(fmsg, version, baseTime, uptime, record.Values, mapperNetFlow, mapperSFlow); err != nil {
+
 			return flowMessageSet, err
 		}
 		if fmsg != nil {
@@ -644,7 +654,7 @@ func SearchNetFlowDataSetsRecords(version uint16, baseTime uint32, uptime uint32
 
 func SearchNetFlowDataSets(version uint16, baseTime uint32, uptime uint32, dataFlowSet []netflow.DataFlowSet, mapperNetFlow *NetFlowMapper, mapperSFlow *SFlowMapper) (flowMessageSet []producer.ProducerMessage, err error) {
 	for _, dataFlowSetItem := range dataFlowSet {
-		fmsg, err := SearchNetFlowDataSetsRecords(version, baseTime, uptime, dataFlowSetItem.Records, mapperNetFlow, mapperSFlow)
+		fmsg, err := SearchNetFlowDataSetsRecords(version, baseTime, uptime, dataFlowSetItem.Records, mapperNetFlow, mapperSFlow, dataFlowSetItem.Id)
 		if err != nil {
 			return flowMessageSet, err
 		}

@@ -47,7 +47,8 @@ message FlowMessage {
   // Interfaces
   uint32 in_if = 18;
   uint32 out_if = 19;
-
+  string in_if_name=113;
+  string out_if_name=114;
   // Ethernet information
   uint64 src_mac = 27;
   uint64 dst_mac = 28;
@@ -94,4 +95,8 @@ message FlowMessage {
 
   uint32 observation_domain_id = 70;
   uint32 observation_point_id = 71;
+
+  //ovs template id
+  uint32 template_id=115;
+  //
 }
