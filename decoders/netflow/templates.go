@@ -2,6 +2,7 @@ package netflow
 
 import (
 	"fmt"
+	log "github.com/sirupsen/logrus"
 	"sync"
 )
 
@@ -44,6 +45,7 @@ func (ts *BasicTemplateSystem) AddTemplate(version uint16, obsDomainId uint32, t
 	}*/
 	key := templateKey(version, obsDomainId, templateId)
 	ts.templates[key] = template
+	log.Infof("Template add %d %d %d with key %d, now total templates %d", version, obsDomainId, templateId, key, len(ts.templates))
 	return nil
 }
 
@@ -54,6 +56,7 @@ func (ts *BasicTemplateSystem) GetTemplate(version uint16, obsDomainId uint32, t
 	if template, ok := ts.templates[key]; ok {
 		return template, nil
 	}
+	log.Debugf("template key not found %d in total %d templates", key, len(ts.templates))
 	return nil, ErrorTemplateNotFound
 }
 

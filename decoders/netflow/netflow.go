@@ -5,7 +5,6 @@ import (
 	"encoding/binary"
 	"errors"
 	"fmt"
-
 	"github.com/netsampler/goflow2/v2/decoders/utils"
 )
 

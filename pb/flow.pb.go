@@ -146,7 +146,7 @@ type FlowMessage struct {
 	ObservationDomainId uint32   `protobuf:"varint,70,opt,name=observation_domain_id,json=observationDomainId,proto3" json:"observation_domain_id,omitempty"`
 	ObservationPointId  uint32   `protobuf:"varint,71,opt,name=observation_point_id,json=observationPointId,proto3" json:"observation_point_id,omitempty"`
 	// ovs template id
-	TemplateId uint32 `protobuf:"varint,115,opt,name=template_id,json=templateId,proto3" json:"template_id,omitempty"`
+	TemplateId uint32 `protobuf:"varint,115,opt,name=template_id,json=templateId,proto3" json:"template_id,omitempty"` //
 }
 
 func (x *FlowMessage) Reset() {
