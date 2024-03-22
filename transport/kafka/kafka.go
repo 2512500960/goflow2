@@ -6,6 +6,7 @@ import (
 	"errors"
 	"flag"
 	"fmt"
+	"github.com/netsampler/goflow2/v2/producer"
 	"net"
 	"os"
 	"strconv"
@@ -228,7 +229,7 @@ func (d *KafkaDriver) Init() error {
 	return err
 }
 
-func (d *KafkaDriver) Send(key, data []byte) error {
+func (d *KafkaDriver) Send(key, data []byte, msg producer.ProducerMessage) error {
 	d.producer.Input() <- &sarama.ProducerMessage{
 		Topic: d.kafkaTopic,
 		Key:   sarama.ByteEncoder(key),

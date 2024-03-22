@@ -2,6 +2,7 @@ package transport
 
 import (
 	"fmt"
+	"github.com/netsampler/goflow2/v2/producer"
 	"sync"
 )
 
@@ -26,14 +27,14 @@ func (e *DriverTransportError) Unwrap() []error {
 }
 
 type TransportDriver interface {
-	Prepare() error              // Prepare driver (eg: flag registration)
-	Init() error                 // Initialize driver (eg: start connections, open files...)
-	Close() error                // Close driver (eg: close connections and files...)
-	Send(key, data []byte) error // Send a formatted message
+	Prepare() error                                            // Prepare driver (eg: flag registration)
+	Init() error                                               // Initialize driver (eg: start connections, open files...)
+	Close() error                                              // Close driver (eg: close connections and files...)
+	Send(key, data []byte, msg producer.ProducerMessage) error // Send a formatted message
 }
 
 type TransportInterface interface {
-	Send(key, data []byte) error
+	Send(key, data []byte, msg producer.ProducerMessage) error
 }
 
 type Transport struct {
@@ -48,8 +49,8 @@ func (t *Transport) Close() error {
 	return nil
 }
 
-func (t *Transport) Send(key, data []byte) error {
-	if err := t.TransportDriver.Send(key, data); err != nil {
+func (t *Transport) Send(key, data []byte, msg producer.ProducerMessage) error {
+	if err := t.TransportDriver.Send(key, data, msg); err != nil {
 		return &DriverTransportError{t.name, err}
 	}
 	return nil

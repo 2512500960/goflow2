@@ -75,7 +75,12 @@ func (m *ProtoProducerMessage) Key() []byte {
 	m.baseKey(h)
 	return h.Sum(nil)
 }
-
+func (m *ProtoProducerMessage) TopicSublevel() string {
+	if m.TemplateId >= 256 {
+		return fmt.Sprintf("%d", m.TemplateId)
+	}
+	return ""
+}
 func (m *ProtoProducerMessage) MarshalJSON() ([]byte, error) {
 	return []byte(m.FormatMessageReflectJSON("")), nil
 }

@@ -3,6 +3,7 @@ package file
 import (
 	"flag"
 	"fmt"
+	"github.com/netsampler/goflow2/v2/producer"
 	"github.com/netsampler/goflow2/v2/transport"
 	"io"
 	"os"
@@ -76,7 +77,7 @@ func (d *FileDriver) Init() error {
 	return nil
 }
 
-func (d *FileDriver) Send(key, data []byte) error {
+func (d *FileDriver) Send(key, data []byte, msg producer.ProducerMessage) error {
 	d.lock.RLock()
 	w := d.w
 	d.lock.RUnlock()

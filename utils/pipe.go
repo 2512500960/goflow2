@@ -3,6 +3,7 @@ package utils
 import (
 	"bytes"
 	"fmt"
+	log "github.com/sirupsen/logrus"
 	"sync"
 
 	"github.com/netsampler/goflow2/v2/decoders/netflow"
@@ -45,7 +46,7 @@ func (p *flowpipe) formatSend(flowMessageSet []producer.ProducerMessage) error {
 				return err
 			}
 			if p.transport != nil {
-				if err = p.transport.Send(key, data); err != nil {
+				if err = p.transport.Send(key, data, msg); err != nil {
 					return err
 				}
 			}
@@ -147,9 +148,12 @@ func (p *NetFlowPipe) DecodeFlow(msg interface{}) error {
 		return fmt.Errorf("flow is not *Message")
 	}
 	buf := bytes.NewBuffer(pkt.Payload)
-
+	// original code assumes that each exporter_ip+export_src_port has defferent template system
+	// for quick testing/debugging， should change the key to src ip only, so that one could replay early captured templateSet packets,
+	// hence skip the waiting time for ipfix templateSet defination packets to be received
 	key := pkt.Src.String()
-
+	//key := pkt.Src.Addr().String()
+	log.Debugf("templates key %s", key)
 	p.templateslock.RLock()
 	templates, ok := p.templates[key]
 	p.templateslock.RUnlock()

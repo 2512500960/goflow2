@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="ALL" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="8e34f466-9981-470c-8311-6533711c08dd" name="Changes" comment="add mqtt as transport output">
+      <change afterPath="$PROJECT_DIR$/ovs_ipfix_templateid_enum.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/producer/proto/messages.go" beforeDir="false" afterPath="$PROJECT_DIR$/producer/proto/messages.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/replay_ipfix_templates.py" beforeDir="false" afterPath="$PROJECT_DIR$/replay_ipfix_templates.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/transport/file/transport.go" beforeDir="false" afterPath="$PROJECT_DIR$/transport/file/transport.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/transport/kafka/kafka.go" beforeDir="false" afterPath="$PROJECT_DIR$/transport/kafka/kafka.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/transport/mqtt/mqtt.go" beforeDir="false" afterPath="$PROJECT_DIR$/transport/mqtt/mqtt.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/transport/transport.go" beforeDir="false" afterPath="$PROJECT_DIR$/transport/transport.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/pipe.go" beforeDir="false" afterPath="$PROJECT_DIR$/utils/pipe.go" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Go File" />
+      </list>
+    </option>
+  </component>
+  <component name="GOROOT" url="file:///usr/local/go" />
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 4
+}</component>
+  <component name="ProjectId" id="2dtzXlJuWwypSykECYOLIMxr3xH" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_ADD_EXTERNAL_FILES": "true",
+    "DefaultGoTemplateProperty": "Go File",
+    "Go Build.go build .executor": "Run",
+    "Go Build.go build github.com/netsampler/goflow2/v2.executor": "Run",
+    "Go Build.go build github.com/netsampler/goflow2/v2/cmd/goflow2.executor": "Run",
+    "Go Build.main.executor": "Debug",
+    "Makefile Target.build.executor": "Run",
+    "Makefile Target.package-deb.executor": "Run",
+    "Makefile Target.package-rpm.executor": "Run",
+    "Makefile Target.proto.executor": "Run",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.go.formatter.settings.were.checked": "true",
+    "RunOnceActivity.go.migrated.go.modules.settings": "true",
+    "RunOnceActivity.go.modules.automatic.dependencies.download": "true",
+    "RunOnceActivity.go.modules.go.list.on.any.changes.was.set": "true",
+    "git-widget-placeholder": "main",
+    "go.import.settings.migrated": "true",
+    "go.sdk.automatically.set": "true",
+    "last_opened_file_path": "/root/goflow2/cmd/goflow2",
+    "node.js.detected.package.eslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "go.vgo"
+  }
+}]]></component>
+  <component name="RdControllerToolWindowsLayoutState" isNewUi="true">
+    <layout>
+      <window_info id="Bookmarks" show_stripe_button="false" side_tool="true" />
+      <window_info id="Merge Requests" show_stripe_button="false" />
+      <window_info id="Commit_Guest" show_stripe_button="false" />
+      <window_info id="Pull Requests" show_stripe_button="false" />
+      <window_info id="Learn" show_stripe_button="false" />
+      <window_info id="DFA" show_stripe_button="false" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.16542968" />
+      <window_info id="Commit" order="1" weight="0.22242647" />
+      <window_info id="Structure" order="2" side_tool="true" weight="0.25" />
+      <window_info anchor="bottom" id="Database Changes" show_stripe_button="false" />
+      <window_info anchor="bottom" id="TypeScript" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Debug" weight="0.46489364" />
+      <window_info anchor="bottom" id="TODO" show_stripe_button="false" />
+      <window_info anchor="bottom" id="File Transfer" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Run" weight="0.46489364" />
+      <window_info anchor="bottom" id="Find" weight="0.46489364" />
+      <window_info anchor="bottom" id="Version Control" order="0" weight="0.28262413" />
+      <window_info anchor="bottom" id="Problems View" order="1" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="2" visible="true" weight="0.46489364" />
+      <window_info anchor="bottom" id="Services" order="3" />
+      <window_info anchor="right" id="Endpoints" show_stripe_button="false" />
+      <window_info anchor="right" id="make" show_stripe_button="false" side_tool="true" />
+      <window_info anchor="right" id="Coverage" side_tool="true" />
+      <window_info anchor="right" id="Notifications" order="0" weight="0.33009452" />
+      <window_info anchor="right" id="AIAssistant" order="1" weight="0.33009452" />
+      <window_info anchor="right" id="Database" order="2" weight="0.33009452" />
+    </layout>
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/cmd/goflow2" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Go Build.main">
+    <configuration name="main" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true">
+      <module name="goflow2" />
+      <working_directory value="$PROJECT_DIR$" />
+      <parameters value="-transport=mqtt -transport.mqtt.broker=tcp://localhost:1883 -transport.mqtt.id=goflowv2  -addr=:8082 -listen netflow://:2055 -loglevel=debug" />
+      <kind value="FILE" />
+      <package value="github.com/netsampler/goflow2/v2/cmd/goflow2" />
+      <directory value="$PROJECT_DIR$/cmd/goflow2" />
+      <filePath value="$PROJECT_DIR$/cmd/goflow2/main.go" />
+      <method v="2" />
+    </configuration>
+    <configuration name="build" type="MAKEFILE_TARGET_RUN_CONFIGURATION" factoryName="Makefile" temporary="true">
+      <makefile filename="$PROJECT_DIR$/Makefile" target="build" workingDirectory="" arguments="">
+        <envs />
+      </makefile>
+      <method v="2" />
+    </configuration>
+    <list>
+      <item itemvalue="Go Build.main" />
+      <item itemvalue="Makefile Target.build" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Go Build.main" />
+        <item itemvalue="Makefile Target.build" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-gosdk-467a64f6063b-ee0e143f3e2b-org.jetbrains.plugins.go.sharedIndexes.bundled-GO-233.11799.194" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="UnknownFeatures">
+    <option featureType="com.intellij.fileTypeFactory" implementationName="*.py" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
+    <MESSAGE value="for ovs ipfix, add interface name" />
+    <MESSAGE value="add mqtt as transport output" />
+    <option name="LAST_COMMIT_MESSAGE" value="add mqtt as transport output" />
+  </component>
+  <component name="VgoProject">
+    <settings-migrated>true</settings-migrated>
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/utils/pipe.go</url>
+          <line>248</line>
+          <option name="timeStamp" value="48" />
+        </line-breakpoint>
+      </breakpoints>
+      <default-breakpoints>
+        <breakpoint type="DlvErrorBreakpoint" />
+      </default-breakpoints>
+    </breakpoint-manager>
+  </component>
+</project>
