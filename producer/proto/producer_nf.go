@@ -263,7 +263,7 @@ func addrReplaceCheck(dstAddr *[]byte, v []byte, eType *uint32, ipv6 bool) {
 	}
 }
 
-func ConvertNetFlowDataSet(flowMessage *ProtoProducerMessage, version uint16, baseTime uint32, uptime uint32, record []netflow.DataField, mapperNetFlow *NetFlowMapper, mapperSFlow *SFlowMapper) error {
+func ConvertNetFlowDataSet(flowMessage *ProtoProducerMessage, version uint16, baseTime uint32, uptime uint32, record []netflow.DataField, mapperNetFlow TemplateMapper, mapperSFlow PacketMapper) error {
 	var time uint64
 	baseTimeNs := uint64(baseTime) * 1000000000
 	// the following should be overriden if the template contains timing information
@@ -518,7 +518,9 @@ func ConvertNetFlowDataSet(flowMessage *ProtoProducerMessage, version uint16, ba
 				return err
 			}
 			if len(flowMessage.MplsLabel) < 2 {
-				flowMessage.MplsLabel = make([]uint32, 2)
+				tmpLabels := make([]uint32, 2)
+				copy(tmpLabels, flowMessage.MplsLabel)
+				flowMessage.MplsLabel = tmpLabels
 			}
 			flowMessage.MplsLabel[1] = uint32(mplsLabel >> 4)
 		case netflow.IPFIX_FIELD_mplsLabelStackSection3:
@@ -527,7 +529,9 @@ func ConvertNetFlowDataSet(flowMessage *ProtoProducerMessage, version uint16, ba
 				return err
 			}
 			if len(flowMessage.MplsLabel) < 3 {
-				flowMessage.MplsLabel = make([]uint32, 3)
+				tmpLabels := make([]uint32, 3)
+				copy(tmpLabels, flowMessage.MplsLabel)
+				flowMessage.MplsLabel = tmpLabels
 			}
 			flowMessage.MplsLabel[2] = uint32(mplsLabel >> 4)
 		case netflow.IPFIX_FIELD_mplsTopLabelIPv4Address:
@@ -538,21 +542,22 @@ func ConvertNetFlowDataSet(flowMessage *ProtoProducerMessage, version uint16, ba
 		default:
 			if version == 9 {
 				// NetFlow v9 time works with a differential based on router's uptime
+				uptimeNs := uint64(uptime) * 1e6 // uptime is in milliseconds in NetFlow v9, converts to nanoseconds
 				switch df.Type {
 				case netflow.NFV9_FIELD_FIRST_SWITCHED:
 					var timeFirstSwitched uint32
 					if err := DecodeUNumber(v, &timeFirstSwitched); err != nil {
 						return err
 					}
-					timeDiff := (uptime - timeFirstSwitched)
-					flowMessage.TimeFlowStartNs = baseTimeNs - uint64(timeDiff)*1000000000
+					timeDiff := (uptimeNs - uint64(timeFirstSwitched)*1e6)
+					flowMessage.TimeFlowStartNs = baseTimeNs - timeDiff
 				case netflow.NFV9_FIELD_LAST_SWITCHED:
 					var timeLastSwitched uint32
 					if err := DecodeUNumber(v, &timeLastSwitched); err != nil {
 						return err
 					}
-					timeDiff := (uptime - timeLastSwitched)
-					flowMessage.TimeFlowEndNs = baseTimeNs - uint64(timeDiff)*1000000000
+					timeDiff := (uptimeNs - uint64(timeLastSwitched)*1e6)
+					flowMessage.TimeFlowEndNs = baseTimeNs - timeDiff
 				}
 			} else if version == 10 {
 				switch df.Type {
@@ -613,7 +618,7 @@ func ConvertNetFlowDataSet(flowMessage *ProtoProducerMessage, version uint16, ba
 					}
 					flowMessage.Packets = 1
 				case netflow.IPFIX_FIELD_dataLinkFrameSection:
-					if err := ParseEthernetHeader(flowMessage, v, mapperSFlow); err != nil {
+					if err := mapperSFlow.ParsePacket(flowMessage, v); err != nil {
 						return err
 					}
 					flowMessage.Packets = 1
@@ -635,7 +640,7 @@ func ConvertNetFlowDataSet(flowMessage *ProtoProducerMessage, version uint16, ba
 	return nil
 }
 
-func SearchNetFlowDataSetsRecords(version uint16, baseTime uint32, uptime uint32, dataRecords []netflow.DataRecord, mapperNetFlow *NetFlowMapper, mapperSFlow *SFlowMapper, templateId uint16) (flowMessageSet []producer.ProducerMessage, err error) {
+func SearchNetFlowDataSetsRecords(version uint16, baseTime uint32, uptime uint32, dataRecords []netflow.DataRecord, mapperNetFlow TemplateMapper, mapperSFlow PacketMapper, templateId uint16) (flowMessageSet []producer.ProducerMessage, err error) {
 	for _, record := range dataRecords {
 		fmsg := protoMessagePool.Get().(*ProtoProducerMessage)
 
@@ -652,7 +657,7 @@ func SearchNetFlowDataSetsRecords(version uint16, baseTime uint32, uptime uint32
 	return flowMessageSet, nil
 }
 
-func SearchNetFlowDataSets(version uint16, baseTime uint32, uptime uint32, dataFlowSet []netflow.DataFlowSet, mapperNetFlow *NetFlowMapper, mapperSFlow *SFlowMapper) (flowMessageSet []producer.ProducerMessage, err error) {
+func SearchNetFlowDataSets(version uint16, baseTime uint32, uptime uint32, dataFlowSet []netflow.DataFlowSet, mapperNetFlow TemplateMapper, mapperSFlow PacketMapper) (flowMessageSet []producer.ProducerMessage, err error) {
 	for _, dataFlowSetItem := range dataFlowSet {
 		fmsg, err := SearchNetFlowDataSetsRecords(version, baseTime, uptime, dataFlowSetItem.Records, mapperNetFlow, mapperSFlow, dataFlowSetItem.Id)
 		if err != nil {
@@ -724,18 +729,18 @@ func SplitIPFIXSets(packetIPFIX netflow.IPFIXPacket) ([]netflow.DataFlowSet, []n
 
 // Convert a NetFlow datastructure to a FlowMessage protobuf
 // Does not put sampling rate
-func ProcessMessageIPFIXConfig(packet *netflow.IPFIXPacket, samplingRateSys SamplingRateSystem, config *producerConfigMapped) (flowMessageSet []producer.ProducerMessage, err error) {
+func ProcessMessageIPFIXConfig(packet *netflow.IPFIXPacket, samplingRateSys SamplingRateSystem, config ProtoProducerConfig) (flowMessageSet []producer.ProducerMessage, err error) {
 	dataFlowSet, _, _, optionDataFlowSet := SplitIPFIXSets(*packet)
 
 	seqnum := packet.SequenceNumber
 	baseTime := packet.ExportTime
 	obsDomainId := packet.ObservationDomainId
 
-	var cfgIpfix *NetFlowMapper
-	var cfgSflow *SFlowMapper
+	var cfgIpfix TemplateMapper
+	var cfgSflow PacketMapper
 	if config != nil {
-		cfgIpfix = config.IPFIX
-		cfgSflow = config.SFlow
+		cfgIpfix = config.GetIPFIXMapper()
+		cfgSflow = config.GetPacketMapper()
 	}
 	flowMessageSet, err = SearchNetFlowDataSets(10, baseTime, 0, dataFlowSet, cfgIpfix, cfgSflow)
 	if err != nil {
@@ -767,7 +772,7 @@ func ProcessMessageIPFIXConfig(packet *netflow.IPFIXPacket, samplingRateSys Samp
 
 // Convert a NetFlow datastructure to a FlowMessage protobuf
 // Does not put sampling rate
-func ProcessMessageNetFlowV9Config(packet *netflow.NFv9Packet, samplingRateSys SamplingRateSystem, config *producerConfigMapped) (flowMessageSet []producer.ProducerMessage, err error) {
+func ProcessMessageNetFlowV9Config(packet *netflow.NFv9Packet, samplingRateSys SamplingRateSystem, config ProtoProducerConfig) (flowMessageSet []producer.ProducerMessage, err error) {
 	dataFlowSet, _, _, optionDataFlowSet := SplitNetFlowSets(*packet)
 
 	seqnum := packet.SequenceNumber
@@ -775,11 +780,11 @@ func ProcessMessageNetFlowV9Config(packet *netflow.NFv9Packet, samplingRateSys S
 	uptime := packet.SystemUptime
 	obsDomainId := packet.SourceId
 
-	var cfg *NetFlowMapper
+	var cfgNetFlow TemplateMapper
 	if config != nil {
-		cfg = config.NetFlowV9
+		cfgNetFlow = config.GetNetFlowMapper()
 	}
-	flowMessageSet, err = SearchNetFlowDataSets(9, baseTime, uptime, dataFlowSet, cfg, nil)
+	flowMessageSet, err = SearchNetFlowDataSets(9, baseTime, uptime, dataFlowSet, cfgNetFlow, nil)
 	if err != nil {
 		return flowMessageSet, err
 	}

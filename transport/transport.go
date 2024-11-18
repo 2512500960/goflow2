@@ -10,7 +10,7 @@ var (
 	transportDrivers = make(map[string]TransportDriver)
 	lock             = &sync.RWMutex{}
 
-	ErrorTransport = fmt.Errorf("transport error")
+	ErrTransport = fmt.Errorf("transport error")
 )
 
 type DriverTransportError struct {
@@ -23,7 +23,7 @@ func (e *DriverTransportError) Error() string {
 }
 
 func (e *DriverTransportError) Unwrap() []error {
-	return []error{ErrorTransport, e.Err}
+	return []error{ErrTransport, e.Err}
 }
 
 type TransportDriver interface {
@@ -71,7 +71,7 @@ func FindTransport(name string) (*Transport, error) {
 	t, ok := transportDrivers[name]
 	lock.RUnlock()
 	if !ok {
-		return nil, fmt.Errorf("%w %s not found", ErrorTransport, name)
+		return nil, fmt.Errorf("%w %s not found", ErrTransport, name)
 	}
 
 	err := t.Init()
