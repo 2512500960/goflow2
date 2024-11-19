@@ -351,7 +351,7 @@ func main() {
 							}
 
 							if errors.Is(err, netflow.ErrorTemplateNotFound) {
-								logger.Warn("template error")
+								logger.Debug("template error")
 							} else if errors.Is(err, debug.PanicError) {
 								var pErrMsg *debug.PanicErrorMessage
 								if errors.As(err, &pErrMsg) {

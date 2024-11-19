@@ -45,7 +45,7 @@ func (ts *BasicTemplateSystem) AddTemplate(version uint16, obsDomainId uint32, t
 	}*/
 	key := templateKey(version, obsDomainId, templateId)
 	ts.templates[key] = template
-	log.Infof("Template add %d %d %d with key %d, now total templates %d", version, obsDomainId, templateId, key, len(ts.templates))
+	log.Debugf("Template add %d %d %d with key %d, now total templates %d", version, obsDomainId, templateId, key, len(ts.templates))
 	return nil
 }
 
